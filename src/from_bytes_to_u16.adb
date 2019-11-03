@@ -1,15 +1,12 @@
 with
 Interfaces,
-TFTP_Types,
-Print_Datagram
+TFTP_Types
 ;
 
 function From_Bytes_To_U16(From : in TFTP_Types.Two_Byte_Array) return Interfaces.Unsigned_16
 is
    use type Interfaces.Unsigned_16;
 begin
-
-   Print_Datagram(Datagram => From);
 
    return (
       Interfaces.Shift_Left(Interfaces.Unsigned_16(From(From'First)),8)

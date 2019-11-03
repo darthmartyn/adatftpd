@@ -2,7 +2,6 @@ with
 Ada.Directories,
 Ada.Streams,
 Ada.Strings.Unbounded,
-Ada.Text_IO,
 Byte_IO,
 Find_String_In_Bytes,
 GNAT.Sockets,
@@ -25,10 +24,7 @@ is
    use type Ada.Directories.File_Size;
    use type TFTP_Types.TFTP_Error_Type;
 
-   --Client_ID_String : constant String := GNAT.Sockets.Image(From_Client);
-
    Filename_String : constant String := Find_String_In_Bytes(Data => Data);
-   -- filename starts at byte 3, following the first 2 bytes which are the client request type
 
    Start_Of_Mode_String : constant Ada.Streams.Stream_Element_Offset :=
       (3 + Filename_String'Length + 1);
@@ -86,8 +82,6 @@ begin
          begin
 
             if Previous_Session_Found then
-
-               Ada.Text_IO.Put_Line("Replacing previous session for " & GNAT.Sockets.Image(From_Client));
 
                Session_Storage.Session_Storage_Type.Replace_Element(
                   Container => Session_Storage.Sessions,

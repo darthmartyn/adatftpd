@@ -9,8 +9,7 @@ Send_TFTP_Error,
 Session_Storage,
 TFTP_Types,
 Unchecked_Conversion,
-Interfaces,
-Ada.Text_IO
+Interfaces
 ;
 
 use
@@ -50,8 +49,6 @@ begin
          GNAT.Sockets.Receive_Socket(Server, Data, Last, From);
 
          OpCode := From_Bytes_To_U16(From => Data(1..2));
-
-         Ada.Text_IO.Put_Line(OpCode'Img);
 
          case OpCode is
 

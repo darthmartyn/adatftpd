@@ -1,6 +1,6 @@
 separate (adatftpd)
 function Find_String_In_Bytes
-  (Data : in Ada.Streams.Stream_Element_Array) return String
+  (Data : Ada.Streams.Stream_Element_Array) return String
 is
 
    use type Ada.Streams.Stream_Element_Offset;

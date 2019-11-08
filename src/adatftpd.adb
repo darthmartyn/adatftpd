@@ -10,14 +10,14 @@ package body adatftpd is
    TFTP_DATA  : constant Interfaces.Unsigned_16 := 16#0003#;
    TFTP_ACK   : constant Interfaces.Unsigned_16 := 16#0004#;
    TFTP_ERROR : constant Interfaces.Unsigned_16 := 16#0005#;
+   --  The above constant values comes from the TFTP protocol (revision 2)
+   --  https://www.ietf.org/rfc/rfc1350.txt
 
    --  Package Body Private Instantiations
 
    package Byte_IO is new Ada.Direct_IO
      (Element_Type => Ada.Streams.Stream_Element);
-
-   package Byte_Printer is new Ada.Text_IO.Modular_IO
-     (Num => Ada.Streams.Stream_Element);
+   --  This package is used to read the bytes from a binary file
 
    --  Package Body Private Types
 

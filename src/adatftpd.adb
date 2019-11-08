@@ -1,6 +1,12 @@
-with Ada.Containers.Doubly_Linked_Lists, Ada.Direct_IO, Ada.Directories, Ada
-  .Streams, Ada.Strings.Unbounded, Ada
-  .Text_IO, Interfaces, Socket_Layer, Unchecked_Conversion;
+with Ada.Containers.Doubly_Linked_Lists;
+with Ada.Direct_IO;
+with Ada.Directories;
+with Ada.Streams;
+with Ada.Strings.Unbounded;
+with Ada.Text_IO;
+with Interfaces;
+with Socket_Layer;
+with Unchecked_Conversion;
 
 package body adatftpd is
 
@@ -19,6 +25,12 @@ package body adatftpd is
      (Element_Type => Ada.Streams.Stream_Element);
    --  This package is used to read the bytes from a binary file
 
+   --  Package use clauses
+
+   use Byte_IO;
+   use Interfaces;
+   use Socket_Layer;
+
    --  Package Body Private Types
 
    type Session_Type is record
@@ -28,8 +40,7 @@ package body adatftpd is
       Filename              : Ada.Strings.Unbounded.Unbounded_String;
    end record;
 
-   function "=" (L, R : Session_Type) return Boolean is
-     (Socket_Layer."=" (L.Client, R.Client));
+   function "=" (L, R : Session_Type) return Boolean is (L.Client = R.Client);
 
    package Session_Storage_Type is new Ada.Containers.Doubly_Linked_Lists
      (Session_Type, "=");
@@ -78,20 +89,29 @@ package body adatftpd is
       Data        : Ada.Streams.Stream_Element_Array);
 
    function Read_TFTP_File_Block
-     (From_File : Byte_IO.File_Type; At_Index : Byte_IO.Positive_Count)
-      return Ada.Streams.Stream_Element_Array;
+     (From_File : Byte_IO.File_Type;
+      At_Index  : Byte_IO.Positive_Count)
+      return Ada.Streams.Stream_Element_Array
+      with Post => Read_TFTP_File_Block'Result'Length <= 512;
 
    procedure Send_TFTP_Data_Block
-     (From_Server : Socket_Layer.Socket_Type;
-      To_Client   : Socket_Layer.Socket_Address_Type; Filename : String;
+     (From_Server  : Socket_Layer.Socket_Type;
+      To_Client    : Socket_Layer.Socket_Address_Type;
+      Filename     : String;
 
       Block_Number : in out Interfaces.Unsigned_16;
       --  Either incremented by 1, or if 65535 then set to 1
 
-      Bytes_Sent : in out Byte_IO.Count
+      Bytes_Sent   : in out Byte_IO.Count
       --  Incremenets by either 512 or the amount of the last
       --  block that is less than 512 bytes in size
-      );
+      ) with Post => (((Block_Number'Old = Interfaces.Unsigned_16'Last
+                       and then
+                       Block_Number = 1)
+                       or else
+                       Block_Number = Interfaces.Unsigned_16'Succ (Block_Number'Old))
+                       and then
+                       (Bytes_Sent in Bytes_Sent'Old .. Bytes_Sent'Old + 512));
 
    --  Package Body Private Subprogram Implementations
 
@@ -99,7 +119,8 @@ package body adatftpd is
      (Data : Ada.Streams.Stream_Element_Array) return String is separate;
 
    function Read_TFTP_File_Block
-     (From_File : Byte_IO.File_Type; At_Index : Byte_IO.Positive_Count)
+     (From_File : Byte_IO.File_Type;
+      At_Index  : Byte_IO.Positive_Count)
       return Ada.Streams.Stream_Element_Array is separate;
 
    procedure Print_Datagram
@@ -109,8 +130,8 @@ package body adatftpd is
      (Bytes : Ada.Streams.Stream_Element_Array) return String is separate;
 
    function From_Bytes_To_U16
-     (From : Ada.Streams.Stream_Element_Array) return Interfaces
-     .Unsigned_16 is separate;
+     (From : Ada.Streams.Stream_Element_Array) return Interfaces.Unsigned_16
+      is separate;
 
    function From_U16_To_Bytes
      (From : Interfaces.Unsigned_16) return Ada.Streams.Stream_Element_Array
@@ -134,8 +155,9 @@ package body adatftpd is
       Data        : Ada.Streams.Stream_Element_Array) is separate;
 
    procedure Send_TFTP_Data_Block
-     (From_Server  :        Socket_Layer.Socket_Type;
-      To_Client    :    Socket_Layer.Socket_Address_Type; Filename : String;
+     (From_Server  : Socket_Layer.Socket_Type;
+      To_Client    : Socket_Layer.Socket_Address_Type;
+      Filename     : String;
       Block_Number : in out Interfaces.Unsigned_16;
       Bytes_Sent   : in out Byte_IO.Count) is separate;
 

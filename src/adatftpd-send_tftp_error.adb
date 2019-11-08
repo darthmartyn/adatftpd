@@ -13,11 +13,14 @@ is
      (From_U16_To_Bytes (16#0005#) & Error_Data & Null_Terminator);
 
    Last_Sent : Ada.Streams.Stream_Element_Offset;
+   pragma Unreferenced (Last_Sent);
 
 begin
 
    Socket_Layer.Send_Datagram
-     (Socket => From_Server, Item => Datagram, Last => Last_Sent,
+     (Socket => From_Server,
+      Item   => Datagram,
+      Last   => Last_Sent,
       To     => To_Client);
 
 end Send_TFTP_Error;

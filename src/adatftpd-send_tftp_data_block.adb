@@ -1,7 +1,8 @@
 separate (adatftpd)
 procedure Send_TFTP_Data_Block
-  (From_Server  :        Socket_Layer.Socket_Type;
-   To_Client    :        Socket_Layer.Socket_Address_Type; Filename : String;
+  (From_Server  : Socket_Layer.Socket_Type;
+   To_Client    : Socket_Layer.Socket_Address_Type;
+   Filename     : String;
    Block_Number : in out Interfaces.Unsigned_16;
    Bytes_Sent   : in out Byte_IO.Count)
 is
@@ -38,7 +39,9 @@ begin
    begin
 
       Socket_Layer.Send_Datagram
-        (Socket => From_Server, Item => Datagram, Last => Last_Sent,
+        (Socket => From_Server,
+         Item   => Datagram,
+         Last   => Last_Sent,
          To     => To_Client);
 
       Bytes_Sent := Bytes_Sent + Data_Part'Length;

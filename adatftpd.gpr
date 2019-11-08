@@ -10,7 +10,7 @@ project Adatftpd is
    end Builder;
 
    package Compiler is
-      for Switches ("ada") use ("-gnata", "-gnatVimopr", "-gnatwku");
+      for Switches ("ada") use ("-gnata");
    end Compiler;
 
    package Naming is

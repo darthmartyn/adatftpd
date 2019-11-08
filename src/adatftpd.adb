@@ -1,14 +1,6 @@
-with
-Ada.Containers.Doubly_Linked_Lists,
-Ada.Direct_IO,
-Ada.Directories,
-Ada.Streams,
-Ada.Strings.Unbounded,
-Ada.Text_IO,
-Interfaces,
-Socket_Layer,
-Unchecked_Conversion
-;
+with Ada.Containers.Doubly_Linked_Lists, Ada.Direct_IO, Ada.Directories, Ada
+  .Streams, Ada.Strings.Unbounded, Ada
+  .Text_IO, Interfaces, Socket_Layer, Unchecked_Conversion;
 
 package body adatftpd is
 
@@ -21,9 +13,11 @@ package body adatftpd is
 
    -- Package Body Private Instantiations
 
-   package Byte_IO is new Ada.Direct_IO(Element_Type => Ada.Streams.Stream_Element);
+   package Byte_IO is new Ada.Direct_IO
+     (Element_Type => Ada.Streams.Stream_Element);
 
-   package Byte_Printer is new Ada.Text_IO.Modular_IO(Num => Ada.Streams.Stream_Element);
+   package Byte_Printer is new Ada.Text_IO.Modular_IO
+     (Num => Ada.Streams.Stream_Element);
 
    -- Package Body Private Types
 
@@ -34,9 +28,11 @@ package body adatftpd is
       Filename              : Ada.Strings.Unbounded.Unbounded_String;
    end record;
 
-   function "="(L,R : Session_Type) return Boolean is (Socket_Layer."="(L.Client,R.Client));
+   function "=" (L, R : Session_Type) return Boolean is
+     (Socket_Layer."=" (L.Client, R.Client));
 
-   package Session_Storage_Type is new Ada.Containers.Doubly_Linked_Lists(Session_Type,"=");
+   package Session_Storage_Type is new Ada.Containers.Doubly_Linked_Lists
+     (Session_Type, "=");
 
    -- Package Body Private Global Variables
 
@@ -44,110 +40,104 @@ package body adatftpd is
 
    -- Package Body Private Subprogram Specifications
 
-   function Find_String_In_Bytes(Data : in Ada.Streams.Stream_Element_Array)
-      return String;
+   function Find_String_In_Bytes
+     (Data : in Ada.Streams.Stream_Element_Array) return String;
 
-   function Convert_Bytes_To_String(Bytes : Ada.Streams.Stream_Element_Array)
-      return String with
+   function Convert_Bytes_To_String
+     (Bytes : Ada.Streams.Stream_Element_Array) return String with
       Post => Convert_Bytes_To_String'Result'Length = Bytes'Length;
 
-   function From_Bytes_To_U16(From : in Ada.Streams.Stream_Element_Array)
-      return Interfaces.Unsigned_16 with
+   function From_Bytes_To_U16
+     (From : in Ada.Streams.Stream_Element_Array) return Interfaces
+     .Unsigned_16 with
       Pre => From'Length = 2;
 
-   function From_U16_To_Bytes(From : Interfaces.Unsigned_16)
-      return Ada.Streams.Stream_Element_Array with
+   function From_U16_To_Bytes
+     (From : Interfaces.Unsigned_16) return Ada.Streams
+     .Stream_Element_Array with
       Post => From_U16_To_Bytes'Result'Length = 2;
 
-   procedure Send_TFTP_Error(
-      From_Server : in     Socket_Layer.Socket_Type;
-      To_Client   : in     Socket_Layer.Socket_Address_Type;
-      Error_Data  : in     Ada.Streams.Stream_Element_Array
-   );
+   procedure Send_TFTP_Error
+     (From_Server : in Socket_Layer.Socket_Type;
+      To_Client   : in Socket_Layer.Socket_Address_Type;
+      Error_Data  : in Ada.Streams.Stream_Element_Array);
 
-   procedure Print_Datagram(Datagram : Ada.Streams.Stream_Element_Array);
-   pragma Unreferenced(Print_Datagram);
+   procedure Print_Datagram (Datagram : Ada.Streams.Stream_Element_Array);
+   pragma Unreferenced (Print_Datagram);
 
-   procedure Process_ACK(
-      Server      : in Socket_Layer.Socket_Type;
+   procedure Process_ACK
+     (Server      : in Socket_Layer.Socket_Type;
       From_Client : in Socket_Layer.Socket_Address_Type;
-      Data        : in Ada.Streams.Stream_Element_Array
-   );
+      Data        : in Ada.Streams.Stream_Element_Array);
 
    procedure Process_Client_Error;
 
-   procedure Process_RRQ(
-      Server      : in Socket_Layer.Socket_Type;
+   procedure Process_RRQ
+     (Server      : in Socket_Layer.Socket_Type;
       From_Client : in Socket_Layer.Socket_Address_Type;
-      Data        : in Ada.Streams.Stream_Element_Array
-   );
+      Data        : in Ada.Streams.Stream_Element_Array);
 
-   function Read_TFTP_File_Block(
-      From_File  : in Byte_IO.File_Type;
-      At_Index   : in Byte_IO.Positive_Count
-   ) return Ada.Streams.Stream_Element_Array;
+   function Read_TFTP_File_Block
+     (From_File : in Byte_IO.File_Type; At_Index : in Byte_IO.Positive_Count)
+      return Ada.Streams.Stream_Element_Array;
 
-   procedure Send_TFTP_Data_Block(
-      From_Server    : Socket_Layer.Socket_Type;
-      To_Client      : Socket_Layer.Socket_Address_Type;
-      Filename       : String;
+   procedure Send_TFTP_Data_Block
+     (From_Server : Socket_Layer.Socket_Type;
+      To_Client   : Socket_Layer.Socket_Address_Type; Filename : String;
 
-      Block_Number   : in out Interfaces.Unsigned_16;
-      -- Either incremented by 1, or if 65535 then set to 1
+      Block_Number : in out Interfaces.Unsigned_16;
+   -- Either incremented by 1, or if 65535 then set to 1
 
-      Bytes_Sent     : in out Byte_IO.Count
-      -- Incremenets by either 512 or the amount of the last block that is less than 512 bytes in size
-   );
+      Bytes_Sent : in out Byte_IO.Count
+      -- Incremenets by either 512 or the amount of the last
+      -- block that is less than 512 bytes in size
+      );
 
    -- Package Body Private Subprogram Implementations (are all separates due to personal preference)
 
-   function Find_String_In_Bytes(Data : in Ada.Streams.Stream_Element_Array)
-     return String is separate;
+   function Find_String_In_Bytes
+     (Data : in Ada.Streams.Stream_Element_Array) return String is separate;
 
-   function Read_TFTP_File_Block(
-      From_File  : in Byte_IO.File_Type;
-      At_Index   : in Byte_IO.Positive_Count
-   ) return Ada.Streams.Stream_Element_Array is separate;
-
-   procedure Print_Datagram(Datagram : Ada.Streams.Stream_Element_Array)
-      is separate;
-
-   function Convert_Bytes_To_String(Bytes : Ada.Streams.Stream_Element_Array)
-      return String is separate;
-
-   function From_Bytes_To_U16(From : in Ada.Streams.Stream_Element_Array)
-      return Interfaces.Unsigned_16 is separate;
-
-   function From_U16_To_Bytes(From : Interfaces.Unsigned_16)
+   function Read_TFTP_File_Block
+     (From_File : in Byte_IO.File_Type; At_Index : in Byte_IO.Positive_Count)
       return Ada.Streams.Stream_Element_Array is separate;
 
-   procedure Send_TFTP_Error(
-      From_Server : in Socket_Layer.Socket_Type;
+   procedure Print_Datagram
+     (Datagram : Ada.Streams.Stream_Element_Array) is separate;
+
+   function Convert_Bytes_To_String
+     (Bytes : Ada.Streams.Stream_Element_Array) return String is separate;
+
+   function From_Bytes_To_U16
+     (From : in Ada.Streams.Stream_Element_Array) return Interfaces
+     .Unsigned_16 is separate;
+
+   function From_U16_To_Bytes
+     (From : Interfaces.Unsigned_16) return Ada.Streams.Stream_Element_Array
+      is separate;
+
+   procedure Send_TFTP_Error
+     (From_Server : in Socket_Layer.Socket_Type;
       To_Client   : in Socket_Layer.Socket_Address_Type;
-      Error_Data  : in Ada.Streams.Stream_Element_Array
-   ) is separate;
+      Error_Data  : in Ada.Streams.Stream_Element_Array) is separate;
 
    procedure Process_Client_Error is separate;
 
-   procedure Process_ACK(
-      Server      : in Socket_Layer.Socket_Type;
+   procedure Process_ACK
+     (Server      : in Socket_Layer.Socket_Type;
       From_Client : in Socket_Layer.Socket_Address_Type;
-      Data        : in Ada.Streams.Stream_Element_Array
-   ) is separate;
+      Data        : in Ada.Streams.Stream_Element_Array) is separate;
 
-   procedure Process_RRQ(
-      Server      : in Socket_Layer.Socket_Type;
+   procedure Process_RRQ
+     (Server      : in Socket_Layer.Socket_Type;
       From_Client : in Socket_Layer.Socket_Address_Type;
-      Data        : in Ada.Streams.Stream_Element_Array
-   ) is separate;
+      Data        : in Ada.Streams.Stream_Element_Array) is separate;
 
-   procedure Send_TFTP_Data_Block(
-      From_Server    : Socket_Layer.Socket_Type;
-      To_Client      : Socket_Layer.Socket_Address_Type;
-      Filename       : String;
-      Block_Number   : in out Interfaces.Unsigned_16;
-      Bytes_Sent     : in out Byte_IO.Count
-   ) is separate;
+   procedure Send_TFTP_Data_Block
+     (From_Server  :        Socket_Layer.Socket_Type;
+      To_Client    :    Socket_Layer.Socket_Address_Type; Filename : String;
+      Block_Number : in out Interfaces.Unsigned_16;
+      Bytes_Sent   : in out Byte_IO.Count) is separate;
 
    procedure Run is separate;
 

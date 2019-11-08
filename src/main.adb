@@ -1,10 +1,8 @@
-with
-adatftpd
-;
+with adatftpd;
 
 procedure Main is
 begin
 
-  adatftpd.Run;
+   adatftpd.Run;
 
 end Main;

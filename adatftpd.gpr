@@ -18,5 +18,9 @@ project Adatftpd is
       for Body ("socket_layer") use "socket_layer-gnat.adb";
    end Naming;
 
+   package Pretty_Printer is
+      for Default_Switches ("ada") use ("-N");
+   end Pretty_Printer;
+
 end Adatftpd;
 

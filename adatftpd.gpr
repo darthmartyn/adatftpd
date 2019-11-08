@@ -1,18 +1,22 @@
-project adatftpd is
+project Adatftpd is
 
    for Languages use ("Ada");
    for Source_Dirs use ("src/**");
    for Object_Dir use "obj";
    for Exec_Dir use "test";
-   for Main use ("adatftpd.adb");
+   for Main use ("main.adb");
 
    package Builder is
-      for Executable ("adatftpd.adb") use "adatftpd";
    end Builder;
 
    package Compiler is
-      for Switches ("ada") use ("-gnatVimopr", "-gnatwku");
+      for Switches ("ada") use ("-gnata", "-gnatVimopr", "-gnatwku");
    end Compiler;
 
-end adatftpd;
+   package Naming is
+      for Spec ("socket_layer") use "socket_layer-gnat.ads";
+      for Body ("socket_layer") use "socket_layer-gnat.adb";
+   end Naming;
+
+end Adatftpd;
 

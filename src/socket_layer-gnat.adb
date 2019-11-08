@@ -24,7 +24,7 @@ package body Socket_Layer is
 
    end Setup_Server;
 
-   procedure Shutdown_Server (Server : in Socket_Type) is
+   procedure Shutdown_Server (Server : Socket_Type) is
    begin
 
       Close_Socket (Socket => Server);
@@ -32,7 +32,8 @@ package body Socket_Layer is
    end Shutdown_Server;
 
    procedure Receive_Datagram
-     (Socket :     Socket_Type; Item : out Ada.Streams.Stream_Element_Array;
+     (Socket : Socket_Type;
+      Item   : out Ada.Streams.Stream_Element_Array;
       Last   : out Ada.Streams.Stream_Element_Offset;
       From   : out Socket_Address_Type)
    is
@@ -44,7 +45,8 @@ package body Socket_Layer is
    end Receive_Datagram;
 
    procedure Send_Datagram
-     (Socket :     Socket_Type; Item : Ada.Streams.Stream_Element_Array;
+     (Socket : Socket_Type;
+      Item   : Ada.Streams.Stream_Element_Array;
       Last   : out Ada.Streams.Stream_Element_Offset; To : Socket_Address_Type)
    is
    begin

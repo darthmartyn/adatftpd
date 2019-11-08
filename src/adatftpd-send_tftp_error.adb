@@ -1,8 +1,8 @@
 separate (adatftpd)
 procedure Send_TFTP_Error
-  (From_Server : in Socket_Layer.Socket_Type;
-   To_Client   : in Socket_Layer.Socket_Address_Type;
-   Error_Data  : in Ada.Streams.Stream_Element_Array)
+  (From_Server : Socket_Layer.Socket_Type;
+   To_Client   : Socket_Layer.Socket_Address_Type;
+   Error_Data  : Ada.Streams.Stream_Element_Array)
 is
 
    use type Ada.Streams.Stream_Element_Array;

@@ -1,6 +1,6 @@
 separate (adatftpd)
 function From_Bytes_To_U16
-  (From : in Ada.Streams.Stream_Element_Array) return Interfaces.Unsigned_16
+  (From : Ada.Streams.Stream_Element_Array) return Interfaces.Unsigned_16
 is
    use type Interfaces.Unsigned_16;
 begin

@@ -1,6 +1,6 @@
 separate (adatftpd)
 function Read_TFTP_File_Block
-  (From_File : in Byte_IO.File_Type; At_Index : in Byte_IO.Positive_Count)
+  (From_File : Byte_IO.File_Type; At_Index : Byte_IO.Positive_Count)
    return Ada.Streams.Stream_Element_Array
 is
 

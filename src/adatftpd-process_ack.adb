@@ -1,8 +1,8 @@
 separate (adatftpd)
 procedure Process_ACK
-  (Server      : in Socket_Layer.Socket_Type;
-   From_Client : in Socket_Layer.Socket_Address_Type;
-   Data        : in Ada.Streams.Stream_Element_Array)
+  (Server      : Socket_Layer.Socket_Type;
+   From_Client : Socket_Layer.Socket_Address_Type;
+   Data        : Ada.Streams.Stream_Element_Array)
 is
 
    use type Session_Storage_Type.Cursor;

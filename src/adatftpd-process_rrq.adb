@@ -1,8 +1,8 @@
 separate (adatftpd)
 procedure Process_RRQ
-  (Server      : in Socket_Layer.Socket_Type;
-   From_Client : in Socket_Layer.Socket_Address_Type;
-   Data        : in Ada.Streams.Stream_Element_Array)
+  (Server      : Socket_Layer.Socket_Type;
+   From_Client : Socket_Layer.Socket_Address_Type;
+   Data        : Ada.Streams.Stream_Element_Array)
 is
 
    use type Ada.Streams.Stream_Element_Offset;
@@ -12,7 +12,6 @@ is
 
    Start_Of_Mode_String : constant Ada.Streams.Stream_Element_Offset :=
      (3 + Filename_String'Length + 1);
--- mode starts 1 characters after the \0 character that terminated the filename
 
    Mode_String : constant String :=
      Find_String_In_Bytes (Data => Data (Start_Of_Mode_String .. Data'Last));
@@ -22,7 +21,7 @@ is
 begin
 
    if File_Exists and then Mode_String = "octet"
-      -- only support binary file transfers
+      --  only support binary file transfers
 
      and then Ada.Directories.Size (Name => Filename_String) > 0
    then

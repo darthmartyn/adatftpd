@@ -45,6 +45,8 @@ package body adatftpd is
    package Session_Storage_Type is new Ada.Containers.Doubly_Linked_Lists
      (Session_Type, "=");
 
+   use Session_Storage_Type;
+
    --  Package Body Private Global Variables
 
    Sessions : Session_Storage_Type.List;
@@ -81,7 +83,8 @@ package body adatftpd is
       From_Client : Socket_Layer.Socket_Address_Type;
       Data        : Ada.Streams.Stream_Element_Array);
 
-   procedure Process_Client_Error;
+   procedure Process_Client_Error
+     (From_Client : Socket_Layer.Socket_Address_Type);
 
    procedure Process_RRQ
      (Server      : Socket_Layer.Socket_Type;
@@ -109,7 +112,8 @@ package body adatftpd is
                        and then
                        Block_Number = 1)
                        or else
-                       Block_Number = Interfaces.Unsigned_16'Succ (Block_Number'Old))
+                       Block_Number =
+                         Interfaces.Unsigned_16'Succ (Block_Number'Old))
                        and then
                        (Bytes_Sent in Bytes_Sent'Old .. Bytes_Sent'Old + 512));
 
@@ -142,7 +146,8 @@ package body adatftpd is
       To_Client   : Socket_Layer.Socket_Address_Type;
       Error_Data  : Ada.Streams.Stream_Element_Array) is separate;
 
-   procedure Process_Client_Error is separate;
+   procedure Process_Client_Error
+     (From_Client : Socket_Layer.Socket_Address_Type) is separate;
 
    procedure Process_ACK
      (Server      : Socket_Layer.Socket_Type;

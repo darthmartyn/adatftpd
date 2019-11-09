@@ -14,7 +14,7 @@ is
      (3 + Filename_String'Length + 1);
 
    Mode_String : constant String :=
-     Find_String_In_Bytes (Data => Data (Start_Of_Mode_String .. Data'Last));
+     Find_String_In_Bytes (Data (Start_Of_Mode_String .. Data'Last));
 
    File_Exists : constant Boolean := Ada.Directories.Exists (Filename_String);
 
@@ -43,7 +43,8 @@ begin
             use type Session_Storage_Type.Cursor;
 
             New_Session : constant Session_Type :=
-              (Client                => From_Client, Bytes_Sent => Bytes_Sent,
+              (Client                => From_Client,
+               Bytes_Sent            => Bytes_Sent,
                Expected_Block_Number => Block_Number,
                Filename              =>
                  Ada.Strings.Unbounded.To_Unbounded_String (Filename_String));
@@ -60,13 +61,15 @@ begin
             if Previous_Session_Found then
 
                Session_Storage_Type.Replace_Element
-                 (Container => Sessions, Position => Previous_Session,
+                 (Container => Sessions,
+                  Position  => Previous_Session,
                   New_Item  => New_Session);
 
             else
 
                Session_Storage_Type.Append
-                 (Container => Sessions, New_Item => New_Session);
+                 (Container => Sessions,
+                  New_Item  => New_Session);
 
             end if;
 
@@ -77,7 +80,8 @@ begin
    else
 
       Send_TFTP_Error
-        (From_Server => Server, To_Client => From_Client,
+        (From_Server => Server,
+         To_Client   => From_Client,
          Error_Data  =>
            (if not File_Exists then From_U16_To_Bytes (16#0001#)
             else From_U16_To_Bytes (16#0004#)));

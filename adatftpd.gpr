@@ -1,4 +1,4 @@
-project Adatftpd_GNAT is
+project Adatftpd is
 
    for Languages use ("Ada");
    for Source_Dirs use ("src/**");
@@ -7,20 +7,12 @@ project Adatftpd_GNAT is
    for Main use ("main.adb");
 
    package Builder is
+      for Executable ("main.adb") use "adatftpd-gnat";
    end Builder;
 
    package Compiler is
       for Switches ("ada") use ("-gnata");
    end Compiler;
 
-   package Naming is
-      for Spec ("socket_layer") use "socket_layer-gnat.ads";
-      for Body ("socket_layer") use "socket_layer-gnat.adb";
-   end Naming;
-
-   package Pretty_Printer is
-      for Default_Switches ("ada") use ("-N");
-   end Pretty_Printer;
-
-end Adatftpd_GNAT;
+end Adatftpd;
 

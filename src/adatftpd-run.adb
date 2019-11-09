@@ -31,23 +31,27 @@ begin
             when TFTP_RRQ =>
 
                Process_RRQ
-                 (Server => Server, From_Client => From,
-                  Data   => Data (3 .. Last));
+                 (Server      => Server,
+                  From_Client => From,
+                  Data        => Data (3 .. Last));
 
             when TFTP_ACK =>
 
                Process_ACK
-                 (Server => Server, From_Client => From,
-                  Data   => Data (3 .. Last));
+                 (Server      => Server,
+                  From_Client => From,
+                  Data        => Data (3 .. Last));
 
             when TFTP_ERROR =>
 
-               Process_Client_Error;
+               Process_Client_Error
+                 (From_Client => From);
 
             when others =>
 
                Send_TFTP_Error
-                 (From_Server => Server, To_Client => From,
+                 (From_Server => Server,
+                  To_Client   => From,
                   Error_Data  => From_U16_To_Bytes (16#0004#));
 
          end case;

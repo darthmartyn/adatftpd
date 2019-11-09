@@ -33,8 +33,8 @@ begin
       if ACK_Block_Number = Existing_Session.Expected_Block_Number then
 
          Send_TFTP_Data_Block
-           (From_Server => Server, To_Client => From_Client,
-            Filename    =>
+           (From_Server  => Server, To_Client => From_Client,
+            Filename     =>
               Ada.Strings.Unbounded.To_String (Existing_Session.Filename),
             Block_Number => Existing_Session.Expected_Block_Number,
             Bytes_Sent   => Existing_Session.Bytes_Sent);
@@ -52,5 +52,7 @@ begin
       end if;
 
    end if;
+   --  Ignore datagrams from any client who hasn't already sent
+   --  an RRQ request.  Eventually,  they will timeout.
 
 end Process_ACK;
